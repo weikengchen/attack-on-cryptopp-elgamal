@@ -1,3 +1,9 @@
+cryptopp-challenger
+cryptopp-keygen
+cryptopp-test
+*.exe
+*.a
+*.o
 .DS_Store
 answer
 question

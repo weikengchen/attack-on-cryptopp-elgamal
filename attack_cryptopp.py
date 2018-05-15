@@ -24,11 +24,14 @@ questions = question_txt.split("\n")
 answers = answer_txt.split()
 
 wrong = 0
-runs = 10000
+runs = 200000
 
 print "Running the experiment..."
 
 for i in xrange(runs):
+    if i % 1000 == 0:
+        print i, "/", runs
+
     question = questions.pop(0)
     answer = int(answers.pop(0), 10)
 
@@ -86,5 +89,5 @@ for i in xrange(runs):
                     if answer != 1:
                         wrong = wrong + 1
 
-print "Number of times the guess was wrong (should be 50% if ElGamal is secure):", wrong, "/", runs
+print "Number of times the guess was correct (should be ~50% if ElGamal is secure):", (runs - wrong), "/", runs
 
