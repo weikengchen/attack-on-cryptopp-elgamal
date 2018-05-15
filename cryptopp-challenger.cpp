@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
        	file_ptsize >> ptsize;
         file_ptsize.close();
 
-	for(int i = 0; i < 200000; i++){
+	for(int i = 0; i < 10000; i++){
 		SecByteBlock plaintext1(ptsize);
 		SecByteBlock plaintext2(ptsize);
 
@@ -81,9 +81,9 @@ int main(int argc, char* argv[])
                 SecByteBlock ciphertext2_c(ecl_2 / 2);
 
 		memcpy(ciphertext1_c, ciphertext1, ecl_1 / 2);
-		memcpy(ciphertext2_c, ciphertext2, ecl_1 / 2);
+		memcpy(ciphertext2_c, ciphertext2, ecl_2 / 2);
 		memcpy(ciphertext1_d, &ciphertext1[ecl_1 / 2], ecl_1 / 2);
-		memcpy(ciphertext2_d, &ciphertext2[ecl_1 / 2], ecl_1 / 2);
+		memcpy(ciphertext2_d, &ciphertext2[ecl_2 / 2], ecl_2 / 2);
 
 		unsigned char rand;
 		rng.GenerateBlock(&rand, 1);

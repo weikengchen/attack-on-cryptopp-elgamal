@@ -214,7 +214,7 @@ void DL_GroupParameters_IntegerBased::GenerateRandom(RandomNumberGenerator &rng,
 		int modulusSize, subgroupOrderSize;
 
 		if (!alg.GetIntValue("ModulusSize", modulusSize))
-			modulusSize = alg.GetIntValueWithDefault("KeySize", 2048);
+			modulusSize = alg.GetIntValueWithDefault("KeySize", 128);
 
 		if (!alg.GetIntValue("SubgroupOrderSize", subgroupOrderSize))
 			subgroupOrderSize = GetDefaultSubgroupOrderSize(modulusSize);
