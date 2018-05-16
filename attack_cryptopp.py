@@ -1,16 +1,11 @@
-from subprocess import call
+from termcolor import colored
+import sys
 import random
 import math
 
-# Check if a value is quadratic residue (QR) for safe primes
 def isQR(x, p):
     q = (p - 1) / 2
     return pow(x, q, p)
-
-# Key generation. We use 512-bit only for better performance
-#call("make")
-#call("./cryptopp-keygen")
-#call("./cryptopp-challenger")
 
 p = int(open("./p").read(), 10)
 g = int(open("./g").read(), 10)
@@ -23,12 +18,11 @@ answer_txt = open("./answer").read()
 questions = question_txt.split("\n")
 answers = answer_txt.split()
 
-win = 0
 wrong = 0
 giveup = 0
 go_guess = 0
 go_guess_correct = 0
-runs = 10000
+runs = 1000
 
 print "Running the experiment..."
 
@@ -67,20 +61,32 @@ for i in xrange(runs):
         if plaintext1_QR < plaintext2_QR:
             preference = -1 
 
-    if preference == 1:
-        win = win + 0.5 * plaintext1_QR / 256.0 * plaintext2_QR / 256.0 + 0.5 * (1  - plaintext1_QR / 256.0) * (1  - plaintext2_QR / 256.0) + plaintext1_QR / 256.0 * (1  - plaintext2_QR / 256.0)
-    if preference == -1:
-        win = win + 0.5 * plaintext1_QR / 256.0 * plaintext2_QR / 256.0 + 0.5 * (1  - plaintext1_QR / 256.0) * (1  - plaintext2_QR / 256.0) + plaintext2_QR / 256.0 * (1  - plaintext1_QR / 256.0)
-    if preference == 0:
-        win = win + 0.5
+    if isQR(ciphertext1_2, p) == 1 and isQR(ciphertext2_2, p) == 1:
+        sys.stdout.write(colored("0.500 ", "green"))
+    else:
+        if (isQR(ciphertext1_2, p) != 1) and (isQR(ciphertext2_2, p) != 1):
+            sys.stdout.write(colored("0.500 ", "green"))
+        else:
+            bottom = plaintext1_QR / 256.0 * (1 - plaintext2_QR / 256.0) + plaintext2_QR / 256.0 * (1 - plaintext1_QR / 256.0)
+            if preference == 1:
+                buf = plaintext1_QR / 256.0 * (1 - plaintext2_QR / 256.0) / bottom
+                buf = "%.3f " % buf
+                sys.stdout.write(colored(buf, "red"))
+            else:
+                buf = plaintext2_QR / 256.0 * (1 - plaintext1_QR / 256.0) / bottom
+                buf = "%.3f " % buf
+                sys.stdout.write(colored(buf, "red"))
+
+    if (i + 1) % 10 == 0:
+        sys.stdout.write("\n")
 
     if preference == 0:
         giveup = giveup + 1
         guess = random.randint(0, 1)
         if guess != answer:
             wrong = wrong + 1
-        if (i + 1) % 1000 == 0:
-            print "Total ", (i + 1), " (correct: ", (i + 1  - wrong), "), giving up by random toss: ", giveup, ", guessing: ", go_guess, " (correct: ", go_guess_correct, "), guess successful rate: ", win / (i + 1) 
+        if (i + 1) % 100 == 0:
+            print "Total ", (i + 1), " (correct: ", (i + 1  - wrong), "), giving up by random toss: ", giveup, ", guessing: ", go_guess, " (correct: ", go_guess_correct, ")" 
         continue
 
     if isQR(ciphertext1_2, p) == 1 and isQR(ciphertext2_2, p) == 1:
@@ -119,6 +125,6 @@ for i in xrange(runs):
                         wrong = wrong + 1
                     else:
                         go_guess_correct = go_guess_correct + 1
-    if (i + 1) % 1000 == 0:
-        print "Total ", (i + 1), " (correct: ", (i + 1  - wrong), "), giving up by random toss: ", giveup, ", guessing: ", go_guess, " (correct: ", go_guess_correct, "), guess successful rate: ", win / (i + 1)
+    if (i + 1) % 100 == 0:
+        print "Total ", (i + 1), " (correct: ", (i + 1  - wrong), "), giving up by random toss: ", giveup, ", guessing: ", go_guess, " (correct: ", go_guess_correct, ")"
 

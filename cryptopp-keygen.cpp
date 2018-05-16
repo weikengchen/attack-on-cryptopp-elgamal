@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 	cout << "Generating private key. This may take some time..." << endl;
 
 	ElGamalKeys::PrivateKey privateKey;
-	privateKey.GenerateRandomWithKeySize(prng, 64);
+	privateKey.GenerateRandomWithKeySize(prng, 1024);
 	privateKey.Save(FileSink("elgamal.der", true /*binary*/).Ref());
 
 	ElGamal::Decryptor decryptor(privateKey);
